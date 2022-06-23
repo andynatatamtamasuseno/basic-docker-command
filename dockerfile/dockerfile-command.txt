@@ -1,0 +1,4 @@
+docker build -t namaimage:latest folder-dockerfile
+docker build -t namaimage1:1.0.0 -t namaimage2:latest folder-dockerfile
+--progress=plain = menampikan detail process
+--no-cache = mengulangi proces doker build tanpa cache

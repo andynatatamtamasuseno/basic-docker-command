@@ -1,9 +1,0 @@
-1. ketika create container maka image yang digunakan tidak dapat dihapus
-2. ketika create container dengan nama container yang sama akan terjadi conflic
-3. ketika create container dengan image yang sama dan port yang sama tidak akan conflic ketika runing bersamaa
-4. ketika menghapus container harus memberhentikan dulu
-5. ketika menghapus volume perlu menghapus container terlebih dahulu
-6. ketika membackup volume, container yang menggunakan volume perlu di stop dan perlu membuat container baru sebagai perantara lain dengan cara menggunkan 2 --mount
-7. ketika menghapus network, sebelum itu harus menghapus container yang terdapat pada network tersebut
-
-

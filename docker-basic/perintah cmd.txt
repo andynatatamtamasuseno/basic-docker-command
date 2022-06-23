@@ -1,0 +1,69 @@
+1.docker version = mengecek apakah docker sudah terinstal dan diversi berapa
+2.docker image ls = list of image in docker
+3.docker image pull nameimage:tag = mendownload image "nameimage" di version "tag"
+4.docker image pull redis:latest = sample mendownload redis versin terbaru
+5.docker image rm nameimage:tag = menghapus image  yang sudah terdownload
+6.docker container ls -a = list of container in docker
+7.docker container create --name namacontainer namaimage:tag: membuat container baru dengan nama "namacontainer" dari image "namaimage" dari versi "tag"
+8.docker container ls = list of container status running in docker
+9.docker container start containerId/containerName = menjalankan container di redis status up
+10.docker container stop containerId/containerName = memberhentikan container status exited
+11.docker container rm containerName = menghapus container
+---------------------------------------------------------------------- logs -----------------------------------------------------------------------------
+12.docker container logs containerId/containerName = melihat log container yang sudah ada pada containerId
+13.docker container logs -f containerId/containerName = melihat log secara real time
+---------------------------------------------------------------------exec --------------------------------------------------------------------------------
+14.docker container exec -i -t containerId/containerName /bin/bash = masuk kedalam container  dan mengeksekusi progamnya, perintah "exit" untuk keluar
+--------------------------------------------------------------------- publish-------------------------------------------------------------------------------
+15.docker container create --name namacontainer --publish/-p posthost:portcontainer image:tag = port forward untuk menjalankan app container di local computer
+16. docker container create --name namacontainer --env KEY="value" --env KEY2= "value" image:tag = menambahkan envirotment variable --env/-e
+17. docket container stats = menampilkan stitisika penggunaan memory dan cpu di docker
+18. --memory diikutin angka memory + m(byte),kilobytes,m(megabytes),g(gigabyte)
+19. --cpus menentukan berapa cpu yang bisa digunakan oleh container misal 1.5 1 atau 0.5
+20. docker container create --name namacontainer --memory 256m --cpus 0.5 --publish/-p posthost:portcontainer  image:tag = pengaturan memory dan cpu yang digunakan.
+----------------------------------------------------------------------mounth-------------------------------------------------------------------------------
+21. --mounth sharing file atau folder di os ke container di docker dengan aturan parameter mount 
+22. docker container create --name namacontainer --mount "type=bind,sourche=folder,destination=folder,readonly" image:tag
+23. docker container create  --name mongodata --publish 27019:27017 --mount "type=bind,source=/home/telkom/Documents/belajar-docker/mongo-data,destination=/data/db" -e MONGO_INITDB_ROOT_USERNAME=mongodb -e MONGO_INITDB_ROOT_PASSWORD=mongodb mongo:latest
+----------------------------------------------------------------------volume----------------------------------------------------------------------------------------------
+24. docker volume ls = list of volume in docker
+25. docker volume create namevolume = membuat volume kosong yang dapat disiikan container baru.
+26. docker volume rm name volume = menghapus volume
+27. sudo docker container create  --name mongovolume --publish 27020:27017 --mount "type=volume,source=mongodata,destination=/data/db" -e MONGO_INITDB_ROOT_USERNAME=mongodb -e MONGO_INITDB_ROOT_PASSWORD=mongodb mongo:latest
+------------------------------------------------------------backup data ke local -----------------------------------------------------------------------------------------------
+28.1 sudo docker container create  --name nginxbackupvolume  --mount "type=bind,source=/home/telkom/Documents/belajar-docker/backup,destination=/backup" --mount "type=volume,source=mongodata,destination=/data" nginx:latest= contoh backup volume mongodata
+28.2 docker container exec -i -t 397 /bin/bash = masuk ke folder container
+28.3 tar cvf /backup/backup.tar.gz /data = perintah archive di folder /data container ke folder backup di local
+29.  docker container run --rm  --name nginxbackupvolume  --mount "type=bind,source=/home/telkom/Documents/belajar-docker/backup,destination=/backup" --mount "type=volume,source=mongodata,destination=/data" nginx:latest tar cvf /backup/backup-lagi.tar.gz /data = backup cara automatis menghapus selesai backup
+-------------------------------------------------------------restore data local ------------------------------------------------------------------------------------------------
+30.1  docker create volume mongorestore
+30.2  docker container run --rm  --name nginxrestore  --mount "type=bind,source=/home/telkom/Documents/belajar-docker/backup,destination=/backup" --mount "type=volume,source=mongorestore,destination=/data" nginx:latest bash -c  "cd /data && tar xvf /backup/backup.tar.gz --strip 1" = restore data backup/backup.tar.gz
+30.3  docker container create  --name mongorestore --publish 27021:27017 --mount "type=volume,source=mongorestore,destination=/data/db" -e MONGO_INITDB_ROOT_USERNAME=mongodb -e MONGO_INITDB_ROOT_PASSWORD=mongodb mongo:latest
+--------------------------------------------------------------network--------------------------------------
+31. docker network ls
+32. docker network create  --driver namadrive namanetwork = membuat baru network drive terdiri dari bridge,host,dan none. jika tanpa --drive maka auto drive bridge
+33. docker network rm namanetwork = menghapus network, sebelum itu harus menghapus container yang terhubung dengan network
+34. docker container create --name namacontainer --network namanetworknya
+35. docker container create  --name mongodbNetwork --network mongonetwork  -e MONGO_INITDB_ROOT_USERNAME=mongodb -e MONGO_INITDB_ROOT_PASSWORD=mongodb mongo:latest
+36. docker image pull mongo-express:latest
+37. docker container create --name mongodbexpressNetwork --network mongonetwork --publish 8081:8081 --env  ME_CONFIG_MONGODB_URL="mongodb://mongodb:mongodb@mongodbNetwork:27017/" mongo-express:latest
+38. docker network disconnect namanetwork namacontainer = menghapus container pada networknya
+39. docker network connect namanetwork namacontainer = menambahkan container ke network
+--------------------------------------------------------------inspect---------------------------------------------------------------------
+40. docker image inspect namaimage = melihat detail image
+41. docker container inspect namacontainer == melihat detail container
+42. docker volume inspect namavolume = melihat detail volume
+43. docker network inspect namanetwork = melihat detail network
+-------------------------------------------------------------Prune--------------------------------------------------------
+44. docker container prune =menghapus container yang tidak berjalan
+45. docker image prune = menghapus image yang tidak digunakan
+46. docker volume prune = menghapus volume yang tidak digunakan
+47. docker network prune = menghapus network yang tidak digunakan
+47. docker system prune= menghapus image, container, atau network yang tidak digunakan
+
+
+
+
+
+
+
